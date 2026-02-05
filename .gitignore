@@ -5,4 +5,17 @@ scripts/
 docs/
 src/**/AGENTS.md
 
+# Build Folders
+build/
+bin/
+.gradle/
+out/
 
+# IDE Settings
+.vscode/
+.idea/
+*.swp
+*.log
+
+# Project specific
+config-server/build/

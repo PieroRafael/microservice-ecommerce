@@ -1,0 +1,8 @@
+# Agents Configuration
+AGENTS.md
+.agent/
+scripts/
+docs/
+src/**/AGENTS.md
+
+

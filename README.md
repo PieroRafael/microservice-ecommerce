@@ -1,9 +1,9 @@
 # 🚀 El Proyecto: "CloudNative E-Commerce" (Edición Local-Cloud)
 
-No haremos un "To-Do list". Vamos a construir un sistema de comercio electrónico simplificado. ¿Por qué? Porque tiene dominios naturales (Inventario, Pagos, Usuarios) que nos obligan a resolver los problemas reales de los microservicios: transacciones distribuidas, comunicación asíncrona y escalabilidad.
+Sistema de comercio electrónico simplificado. Con dominiios naturales como : (Inventario, Pagos, Usuarios, entre otros) que nos obligan a resolver los problemas reales de los microservicios: transacciones distribuidas, comunicación asíncrona y escalabilidad.
 
-De esa manera aprenderemos sobre estas tecnologías.
-El objetivo es la creación del (E-commerce) y la infraestructura subyacente para simular AWS en tu máquina local sin gastar un centavo, manteniendo la calidad enterprise.
+Objetivo : 
+Creación del (E-commerce) y la infraestructura subyacente para simular AWS en nuestra máquina local sin gastar un centavo, manteniendo la calidad enterprise.
 
 ---
 
@@ -70,7 +70,7 @@ El objetivo es la creación del (E-commerce) y la infraestructura subyacente par
 
 ## Fase 6: Excelencia Operativa y Modernización (2026 Standards)
 
-**Objetivo:** Lo que diferencia a un Senior de un Junior: Observabilidad profunda y Performance.
+**Objetivo:** : Observabilidad profunda y Performance.
 
 - **Tecnologías:**
   - **OpenTelemetry & Grafana Stack (Loki/Tempo):** Trazabilidad distribuida y **Structured Logging** (nativo en Spring Boot 3.4).
@@ -79,9 +79,7 @@ El objetivo es la creación del (E-commerce) y la infraestructura subyacente par
 
 ---
 
-## 🛠️ Tu Stack Tecnológico Actualizado
-
-Herramientas que debes tener listas (todo gratuito):
+## 🛠️ Stack Tecnológico Actualizado
 
 - **Java 21 (LTS):** Requerido para Virtual Threads.
 - **Spring Boot 3.4+:** Último estándar de estabilidad.
@@ -93,6 +91,3 @@ Herramientas que debes tener listas (todo gratuito):
 - **Postman / Insomnia.**
 
 ---
-
-🛑 **Pausa Estratégica**
-El plan está trazado y optimizado para coste cero y máximo aprendizaje.

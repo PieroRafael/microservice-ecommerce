@@ -1,4 +1,4 @@
-# 🚀 El Proyecto: "CloudNative E-Commerce" (Edición Local-Cloud)
+# 🚀 "CloudNative E-Commerce" (Edición Local-Cloud)
 
 Sistema de comercio electrónico simplificado. Con dominiios naturales como : (Inventario, Pagos, Usuarios, entre otros) que nos obligan a resolver los problemas reales de los microservicios: transacciones distribuidas, comunicación asíncrona y escalabilidad.
 

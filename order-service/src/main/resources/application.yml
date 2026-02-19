@@ -1,30 +1,28 @@
 server:
-  port: 8082 # Evitamos conflicto con Gateway (8080) y Config Server (8888)
+  port: 8083 # Puerto diferente para no chocar con Product (8082) ni Gateway (8080)
 
 spring:
   application:
-    name: product-service
-  config:
-    import: "optional:configserver:http://localhost:8888/"
+    name: order-service
 
   # Base de Datos (Docker)
   datasource:
-    url: jdbc:postgresql://localhost:5432/product_db
+    url: jdbc:postgresql://localhost:5432/order_db # ¡Ojo! Base de datos distinta
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
 
-  # JPA / Hibernate
+  # JPA
   jpa:
     hibernate:
-      ddl-auto: update # ¡Cuidado en prod! Para desarrollo está bien
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  # Virtual Threads (Java 21)
+  # Virtual Threads
   threads:
     virtual:
       enabled: true

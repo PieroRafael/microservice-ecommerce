@@ -1,0 +1,31 @@
+### Product Service API Tests
+
+@host = http://localhost:8082/api/v1/products
+
+### 1. Verificar Salud (Health Check)
+GET {{host}}/status
+
+### 2. Crear un Producto (Create Product)
+POST {{host}}
+Content-Type: application/json
+
+{
+  "name": "Teclado Mecanico RGB",
+  "description": "Switch Brown, Layout Espanol",
+  "price": 89.99,
+  "stock": 15
+}
+
+### 3. Listar Productos (List Products)
+GET {{host}}
+
+### 4. Crear otro Producto (Create Another Product)
+POST {{host}}
+Content-Type: application/json
+
+{
+  "name": "Mouse Gamer Wireless",
+  "description": "20000 DPI, 7 Botones",
+  "price": 59.50,
+  "stock": 50
+}

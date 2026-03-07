@@ -1,9 +1,17 @@
 # Agents Configuration
 AGENTS.md
 .agent/
-scripts/
 docs/
 src/**/AGENTS.md
+
+# Scripts (automatización IA — no es código de producción)
+scripts/
+
+# Variables de entorno locales
+.env
+
+# Memoria persistente del Agente IA (Engram DB)
+.antigravity/
 
 # Build Folders
 build/

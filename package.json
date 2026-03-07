@@ -1,0 +1,15 @@
+{
+  "name": "cloudnative-ecommerce",
+  "version": "1.0.0",
+  "description": "Ecosistema de Microservicios CloudNative E-Commerce",
+  "scripts": {
+    "sync": "powershell -ExecutionPolicy Bypass -File scripts/setup-agent.ps1",
+    "infra:up": "docker-compose up -d",
+    "infra:down": "docker-compose down",
+    "infra:logs": "docker-compose logs -f",
+    "infra:restart": "docker-compose restart",
+    "build:all": "gradlew build -x test",
+    "build:full": "gradlew build",
+    "clean:all": "gradlew clean"
+  }
+}

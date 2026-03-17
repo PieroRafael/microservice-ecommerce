@@ -1,4 +1,4 @@
-package com.cloudnative.ecommerce.product.infrastructure.persistence.entity;
+package com.cloudnative.ecommerce.order.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,24 +9,25 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "products")
+@Table(name = "orders")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductEntity {
+public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
-    private String name;
+    private String orderNumber;
 
-    private String description;
+    @Column(nullable = false)
+    private String skuCode;
 
     @Column(nullable = false)
     private BigDecimal price;
 
     @Column(nullable = false)
-    private Integer stock;
+    private Integer quantity;
 }

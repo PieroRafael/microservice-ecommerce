@@ -1,28 +1,31 @@
 server:
-  port: 8083 # Puerto diferente para no chocar con Product (8082) ni Gateway (8080)
+  port: 8083 # Evitamos conflicto con Gateway (8080) y Config Server (8888) y Product (8082) y Discovery Server (8761)
 
 spring:
   application:
     name: order-service
+  config:
+    import: "optional:configserver:http://localhost:8888/"
 
   # Base de Datos (Docker)
   datasource:
-    url: jdbc:postgresql://localhost:5432/order_db # Base de datos distinta
-    username: admin
-    password: admin
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT_ORDER:5432}/${DB_NAME_ORDER:order_db}
+    username: ${DB_USER_ORDER:admin}
+    password: ${DB_PASSWORD_ORDER:admin}
     driver-class-name: org.postgresql.Driver
+    # SSL se puede configurar aquí si es necesario (ej: url: ...?ssl=${DB_SSL_ORDER:false})
 
   # JPA
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # ¡Cuidado en prod! Para desarrollo está bien
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  # Virtual Threads
+  # Virtual Threads (Java 21)
   threads:
     virtual:
       enabled: true

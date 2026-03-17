@@ -1,0 +1,40 @@
+### Pruebas de API - Order Service
+
+# Obtener todos los pedidos
+GET http://localhost:8083/api/v1/orders
+
+### 
+
+# Crear un nuevo pedido
+POST http://localhost:8083/api/v1/orders
+Content-Type: application/json
+
+{
+  "orderNumber": "ORD-2026-001",
+  "skuCode": "LAPTOP-001",
+  "price": 1200.50,
+  "quantity": 2
+}
+
+###
+
+# Obtener pedido por ID (Reemplazar con un UUID real)
+GET http://localhost:8083/api/v1/orders/c207549a-650f-4bdf-bd69-a20ae3ee20d6
+
+###
+
+# Probar validación (Precio negativo)
+POST http://localhost:8083/api/v1/orders
+Content-Type: application/json
+
+{
+  "orderNumber": "ORD-FAULT",
+  "skuCode": "LAPTOP-001",
+  "price": -100,
+  "quantity": 1
+}
+
+###
+
+# Estado del servicio (Virtual Threads Check)
+GET http://localhost:8083/api/v1/orders/status

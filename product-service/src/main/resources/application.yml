@@ -18,7 +18,7 @@ spring:
   # JPA / Hibernate
   jpa:
     hibernate:
-      ddl-auto: update # ¡Cuidado en prod! Para desarrollo está bien
+      ddl-auto: validate # Estándar profesional: validar en lugar de auto-generar (comportamiento por defecto -> update (es una mala practica pero se puede usar en local))
     show-sql: true
     properties:
       hibernate:

@@ -4,11 +4,11 @@ services:
     image: postgres:15-alpine
     container_name: product-db
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=product_db
+      POSTGRES_DB: ${DB_NAME_PRODUCT:-product_db}
+      POSTGRES_USER: ${DB_USER_PRODUCT:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_PRODUCT:-admin}
     ports:
-      - "5433:5432"
+      - "${DB_PORT_PRODUCT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -16,12 +16,12 @@ services:
   order-db:
     image: postgres:15-alpine
     container_name: order_db
-    ports:
-      - "${DB_PORT_ORDER:-5433}:5432"
     environment:
-      POSTGRES_DB: ${DB_NAME_ORDER:-orders_db}
+      POSTGRES_DB: ${DB_NAME_ORDER:-order_db}
       POSTGRES_USER: ${DB_USER_ORDER:-admin}
-      POSTGRES_PASSWORD: ${DB_PASSWORD_ORDER:-admin123}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_ORDER:-admin}
+    ports:
+      - "${DB_PORT_ORDER:-5432}:5432"
     volumes:
       - order_data:/var/lib/postgresql/data
 
@@ -31,8 +31,8 @@ services:
     container_name: keycloak
     command: start-dev
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     ports:
       - "8081:8080" # Mapeado al 8081 para no chocar con el Gateway (8080)
 
@@ -41,8 +41,8 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     ports:
       - "5050:80"
     depends_on:

@@ -7,11 +7,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
@@ -38,6 +41,13 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
-    // Aquí podemos añadir más manejadores (ej: validaciones, errores de base de
-    // datos, etc.)
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleGenericException(Exception ex) {
+        log.error("Unhandled exception caught: {}", ex.getClass().getName(), ex);
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
+        problem.setTitle("Internal Server Error");
+        problem.setProperty("timestamp", Instant.now());
+        problem.setProperty("dev-message", ex.getMessage());
+        return problem;
+    }
 }

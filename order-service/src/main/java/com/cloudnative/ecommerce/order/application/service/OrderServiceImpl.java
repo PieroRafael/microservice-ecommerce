@@ -27,10 +27,10 @@ public class OrderServiceImpl implements OrderService {
         log.info("Iniciando creación de orden para el producto: {}", order.getSkuCode());
         
         // Validación de negocio: ¿Existe el producto en el catálogo?
-        // En este ejemplo, el skuCode que envía el cliente debe ser un UUID válido
-        UUID productId = UUID.fromString(order.getSkuCode());
-        if (!productGateway.existsById(productId)) {
-            throw new ProductNotFoundException(productId);
+        // El skuCode que envía el cliente se valida contra el microservicio de producto
+        String sku = order.getSkuCode();
+        if (!productGateway.existsBySku(sku)) {
+            throw new ProductNotFoundException(sku);
         }
 
         return orderRepository.save(order);

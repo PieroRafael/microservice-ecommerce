@@ -15,5 +15,8 @@ import java.util.UUID;
 public interface FeignProductClient {
 
     @GetMapping("/{id}")
-    ProductResponse getProductById(@PathVariable UUID id);
+    ProductResponse getProductById(@PathVariable("id") UUID id);
+
+    @GetMapping("/sku/{sku}")
+    ProductResponse getProductBySku(@PathVariable("sku") String sku);
 }

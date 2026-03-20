@@ -33,6 +33,12 @@ public class ProductPersistenceAdapter implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> findBySku(String sku) {
+        return jpaRepository.findBySku(sku)
+                .map(mapper::toDomain);
+    }
+
+    @Override
     public List<Product> findAll() {
         return jpaRepository.findAll().stream()
                 .map(mapper::toDomain)

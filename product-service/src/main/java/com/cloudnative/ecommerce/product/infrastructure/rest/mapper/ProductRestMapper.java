@@ -12,6 +12,7 @@ public class ProductRestMapper {
         if (request == null)
             return null;
         return Product.builder()
+                .sku(request.getSku())
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
@@ -24,6 +25,7 @@ public class ProductRestMapper {
             return null;
         return ProductResponse.builder()
                 .id(domain.getId())
+                .sku(domain.getSku())
                 .name(domain.getName())
                 .description(domain.getDescription())
                 .price(domain.getPrice())

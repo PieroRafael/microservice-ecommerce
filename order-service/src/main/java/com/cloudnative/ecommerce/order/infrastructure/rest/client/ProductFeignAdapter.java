@@ -33,4 +33,18 @@ public class ProductFeignAdapter implements ProductGateway {
             throw new RuntimeException("Error en comunicación con catálogo de productos", e);
         }
     }
+
+    @Override
+    public boolean existsBySku(String sku) {
+        try {
+            ProductResponse response = productClient.getProductBySku(sku);
+            return response != null;
+        } catch (FeignException.NotFound e) {
+            log.warn("Producto no encontrado en product-service por sku: {}", sku);
+            return false;
+        } catch (Exception e) {
+            log.error("Error al consultar product-service para el sku: {}", sku, e);
+            throw new RuntimeException("Error en comunicación con catálogo de productos", e);
+        }
+    }
 }

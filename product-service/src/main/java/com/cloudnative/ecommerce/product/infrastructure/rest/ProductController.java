@@ -41,6 +41,11 @@ public class ProductController {
         return restMapper.toResponse(productService.getProductById(id));
     }
 
+    @GetMapping("/sku/{sku}")
+    public ProductResponse getProductBySku(@PathVariable String sku) {
+        return restMapper.toResponse(productService.getProductBySku(sku));
+    }
+
     @GetMapping
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts().stream()

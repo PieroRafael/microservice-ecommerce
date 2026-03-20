@@ -12,6 +12,7 @@ public class ProductMapper {
             return null;
         return Product.builder()
                 .id(entity.getId())
+                .sku(entity.getSku())
                 .name(entity.getName())
                 .description(entity.getDescription())
                 .price(entity.getPrice())
@@ -24,6 +25,7 @@ public class ProductMapper {
             return null;
         return ProductEntity.builder()
                 .id(domain.getId())
+                .sku(domain.getSku())
                 .name(domain.getName())
                 .description(domain.getDescription())
                 .price(domain.getPrice())

@@ -12,21 +12,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # Base de Datos para Order Service
   order-db:
     image: postgres:15-alpine
-    container_name: order-db
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=order_db
+    container_name: order_db
     ports:
-      - "5432:5432"
+      - "${DB_PORT_ORDER:-5433}:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME_ORDER:-orders_db}
+      POSTGRES_USER: ${DB_USER_ORDER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_ORDER:-admin123}
     volumes:
       - order_data:/var/lib/postgresql/data
 
   # Identity Provider (Seguridad)
   keycloak:
-    image: quay.io/keycloak/keycloak:23.0
+    image: quay.io/keycloak/keycloak:26.1.2
     container_name: keycloak
     command: start-dev
     environment:

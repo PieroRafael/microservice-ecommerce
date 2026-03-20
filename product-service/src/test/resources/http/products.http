@@ -10,6 +10,7 @@ POST {{host}}
 Content-Type: application/json
 
 {
+  "sku": "KB-MECH-RGB",
   "name": "Teclado Mecanico RGB",
   "description": "Switch Brown, Layout Espanol",
   "price": 89.99,
@@ -24,6 +25,7 @@ POST {{host}}
 Content-Type: application/json
 
 {
+  "sku": "MOUSE-WL-20K",
   "name": "Mouse Gamer Wireless",
   "description": "20000 DPI, 7 Botones",
   "price": 59.50,

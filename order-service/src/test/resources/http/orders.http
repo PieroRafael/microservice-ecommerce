@@ -1,40 +1,51 @@
 ### Pruebas de API - Order Service
 
-# Obtener todos los pedidos
-GET http://localhost:8083/api/v1/orders
+@host = http://localhost:8083/api/v1/orders
+@token = Bearer YOUR_TOKEN_HERE
 
-### 
+### 1. Estado del servicio (Virtual Threads Check)
+GET {{host}}/status
 
-# Crear un nuevo pedido
-POST http://localhost:8083/api/v1/orders
+### 2. Obtener todos los pedidos
+GET {{host}}
+Authorization: {{token}}
+
+### 3. Crear un nuevo pedido (Correct implementation)
+POST {{host}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
   "orderNumber": "ORD-2026-001",
-  "skuCode": "LAPTOP-001",
-  "price": 1200.50,
+  "skuCode": "KB-MECH-RGB",
+  "price": 89.99,
   "quantity": 2
 }
 
-###
+### 4. Obtener pedido por ID (Reemplazar con un UUID real)
+GET {{host}}/c207549a-650f-4bdf-bd69-a20ae3ee20d6
+Authorization: {{token}}
 
-# Obtener pedido por ID (Reemplazar con un UUID real)
-GET http://localhost:8083/api/v1/orders/c207549a-650f-4bdf-bd69-a20ae3ee20d6
-
-###
-
-# Probar validación (Precio negativo)
-POST http://localhost:8083/api/v1/orders
+### 5. Probar validación (Precio negativo - RFC 7807)
+POST {{host}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
   "orderNumber": "ORD-FAULT",
-  "skuCode": "LAPTOP-001",
+  "skuCode": "KB-MECH-RGB",
   "price": -100,
   "quantity": 1
 }
 
-###
+### 6. Probar Producto No Encontrado (404 Propagado)
+POST {{host}}
+Authorization: {{token}}
+Content-Type: application/json
 
-# Estado del servicio (Virtual Threads Check)
-GET http://localhost:8083/api/v1/orders/status
+{
+  "orderNumber": "ORD-NOTFOUND",
+  "skuCode": "INVALID-SKU-999",
+  "price": 10.00,
+  "quantity": 1
+}

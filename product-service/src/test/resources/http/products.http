@@ -1,12 +1,14 @@
 ### Product Service API Tests
 
 @host = http://localhost:8082/api/v1/products
+@token = Bearer YOUR_TOKEN_HERE
 
 ### 1. Verificar Salud (Health Check)
 GET {{host}}/status
 
 ### 2. Crear un Producto (Create Product)
 POST {{host}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -17,11 +19,17 @@ Content-Type: application/json
   "stock": 15
 }
 
-### 3. Listar Productos (List Products)
-GET {{host}}
+### 3. Obtener Producto por SKU (Get by SKU) - NEW 2026
+GET {{host}}/sku/KB-MECH-RGB
+Authorization: {{token}}
 
-### 4. Crear otro Producto (Create Another Product)
+### 4. Listar Productos (List Products)
+GET {{host}}
+Authorization: {{token}}
+
+### 5. Crear otro Producto (Create Another Product)
 POST {{host}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -31,3 +39,7 @@ Content-Type: application/json
   "price": 59.50,
   "stock": 50
 }
+
+### 6. Probar Error 404 (RFC 7807)
+GET {{host}}/sku/NON-EXISTENT-SKU
+Authorization: {{token}}

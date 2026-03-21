@@ -66,6 +66,10 @@ resilience4j:
         waitDurationInOpenState: 10s       # Tiempo de espera antes de probar de nuevo (Half-Open)
         permittedNumberOfCallsInHalfOpenState: 3 # Llamados permitidos en estado Half-Open
         automaticTransitionFromOpenToHalfOpenEnabled: true
+        ignoreExceptions:
+          - io.github.resilience4j.ratelimiter.RequestNotPermitted
+          - io.github.resilience4j.bulkhead.BulkheadFullException
+          - feign.FeignException.NotFound
 
   retry:
     instances:
@@ -77,6 +81,19 @@ resilience4j:
           - java.net.ConnectException      # Errores de red si el servicio está apagado
           - java.util.concurrent.TimeoutException
           - java.io.IOException
+
+  ratelimiter:
+    instances:
+      productService:
+        limitForPeriod: 50
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0s
+
+  bulkhead:
+    instances:
+      productService:
+        maxConcurrentCalls: 20
+        maxWaitDuration: 2s
 
 eureka:
   client:

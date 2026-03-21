@@ -2,6 +2,7 @@ package com.cloudnative.ecommerce.order.infrastructure.rest.advice;
 
 import com.cloudnative.ecommerce.order.domain.exception.OrderNotFoundException;
 import com.cloudnative.ecommerce.order.domain.exception.ProductNotFoundException;
+import com.cloudnative.ecommerce.order.domain.exception.ServiceUnavailableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -48,6 +49,18 @@ public class GlobalExceptionHandler {
                 .toList();
 
         problem.setProperty("errors", errors);
+        return problem;
+    }
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ProblemDetail handleServiceUnavailable(ServiceUnavailableException ex) {
+        log.warn("Service unavailable: {} — {}", ex.getServiceName(), ex.getMessage());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
+        problem.setTitle("Service Unavailable");
+        problem.setType(URI.create("https://ecommerce.com/errors/service-unavailable"));
+        problem.setProperty("timestamp", Instant.now());
+        problem.setProperty("service", ex.getServiceName());
+        problem.setProperty("retryAfterSeconds", 10);
         return problem;
     }
 

@@ -1,9 +1,14 @@
 package com.cloudnative.ecommerce.order.infrastructure.rest.client;
 
+import com.cloudnative.ecommerce.order.domain.exception.ServiceUnavailableException;
 import com.cloudnative.ecommerce.order.domain.port.out.ProductGateway;
 import com.cloudnative.ecommerce.order.infrastructure.rest.client.dto.ProductResponse;
 import feign.FeignException;
+import io.github.resilience4j.bulkhead.BulkheadRegistry;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.RetryRegistry;
 import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.annotation.PostConstruct;
@@ -24,6 +29,8 @@ public class ProductFeignAdapter implements ProductGateway {
 
     private final FeignProductClient productClient;
     private final RetryRegistry retryRegistry;
+    private final RateLimiterRegistry rateLimiterRegistry;
+    private final BulkheadRegistry bulkheadRegistry;
 
     @PostConstruct
     public void setupLoggers() {
@@ -32,9 +39,19 @@ public class ProductFeignAdapter implements ProductGateway {
                         event.getNumberOfRetryAttempts(),
                         event.getName(),
                         event.getLastThrowable().getMessage()));
+
+        rateLimiterRegistry.rateLimiter("productService").getEventPublisher()
+                .onFailure(event -> log.warn("Resilience4j RateLimiter: Petición denegada por límite de tasa en {}.", 
+                        event.getRateLimiterName()));
+
+        bulkheadRegistry.bulkhead("productService").getEventPublisher()
+                .onCallRejected(event -> log.warn("Resilience4j Bulkhead: Petición rechazada, capacidad máxima alcanzada en {}.", 
+                        event.getBulkheadName()));
     }
 
     @Override
+    @Bulkhead(name = "productService")
+    @RateLimiter(name = "productService")
     @CircuitBreaker(name = "productService")
     @Retry(name = "productService", fallbackMethod = "fallbackExistsById")
     public boolean existsById(UUID id) {
@@ -50,10 +67,13 @@ public class ProductFeignAdapter implements ProductGateway {
 
     public boolean fallbackExistsById(UUID id, Throwable t) {
         log.error("Circuit Breaker OPEN o Error en product-service para el id {}. Fallback activado. Causa: {}", id, t.getMessage());
-        throw new RuntimeException("Catálogo de productos no disponible temporalmente", t);
+        throw new ServiceUnavailableException("product-service",
+                "Catálogo de productos no disponible temporalmente", t);
     }
 
     @Override
+    @Bulkhead(name = "productService")
+    @RateLimiter(name = "productService")
     @CircuitBreaker(name = "productService")
     @Retry(name = "productService", fallbackMethod = "fallbackExistsBySku")
     public boolean existsBySku(String sku) {
@@ -68,6 +88,7 @@ public class ProductFeignAdapter implements ProductGateway {
 
     public boolean fallbackExistsBySku(String sku, Throwable t) {
         log.error("Circuit Breaker OPEN o Error en product-service para el sku {}. Fallback activado. Causa: {}", sku, t.getMessage());
-        throw new RuntimeException("Catálogo de productos no disponible temporalmente", t);
+        throw new ServiceUnavailableException("product-service",
+                "Catálogo de productos no disponible temporalmente", t);
     }
 }

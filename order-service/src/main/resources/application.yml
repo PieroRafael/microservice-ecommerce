@@ -47,6 +47,11 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: false # Deshabilitado para usar solo @CircuitBreaker en el Adaptador (limpieza de logs)
+      client:
+        config:
+          default:
+            connectTimeout: 2000 # 2 segundos máximo para conectar
+            readTimeout: 2000    # 2 segundos máximo esperando respuesta
 
 # Configuracion de Resilience4j 
 resilience4j:
@@ -61,6 +66,17 @@ resilience4j:
         waitDurationInOpenState: 10s       # Tiempo de espera antes de probar de nuevo (Half-Open)
         permittedNumberOfCallsInHalfOpenState: 3 # Llamados permitidos en estado Half-Open
         automaticTransitionFromOpenToHalfOpenEnabled: true
+
+  retry:
+    instances:
+      productService:   # Debe coincidir con el nombre usado en CircuitBreaker
+        maxAttempts: 3                     # Reintenta un total de 3 veces
+        waitDuration: 2s                   # Espera 2 segundos entre reintentos
+        retryExceptions:
+          - feign.RetryableException       # Errores provocados por Timeout nativo de Feign
+          - java.net.ConnectException      # Errores de red si el servicio está apagado
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
 
 eureka:
   client:

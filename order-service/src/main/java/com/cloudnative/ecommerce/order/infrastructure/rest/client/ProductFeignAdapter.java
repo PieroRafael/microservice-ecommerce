@@ -4,6 +4,9 @@ import com.cloudnative.ecommerce.order.domain.port.out.ProductGateway;
 import com.cloudnative.ecommerce.order.infrastructure.rest.client.dto.ProductResponse;
 import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.RetryRegistry;
+import io.github.resilience4j.retry.annotation.Retry;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,9 +23,20 @@ import java.util.UUID;
 public class ProductFeignAdapter implements ProductGateway {
 
     private final FeignProductClient productClient;
+    private final RetryRegistry retryRegistry;
+
+    @PostConstruct
+    public void setupLoggers() {
+        retryRegistry.retry("productService").getEventPublisher()
+                .onRetry(event -> log.warn("Resilience4j Retry: Intento {} para la operación {}. Causa: {}",
+                        event.getNumberOfRetryAttempts(),
+                        event.getName(),
+                        event.getLastThrowable().getMessage()));
+    }
 
     @Override
-    @CircuitBreaker(name = "productService", fallbackMethod = "fallbackExistsById")
+    @CircuitBreaker(name = "productService")
+    @Retry(name = "productService", fallbackMethod = "fallbackExistsById")
     public boolean existsById(UUID id) {
         try {
             ProductResponse response = productClient.getProductById(id);
@@ -40,7 +54,8 @@ public class ProductFeignAdapter implements ProductGateway {
     }
 
     @Override
-    @CircuitBreaker(name = "productService", fallbackMethod = "fallbackExistsBySku")
+    @CircuitBreaker(name = "productService")
+    @Retry(name = "productService", fallbackMethod = "fallbackExistsBySku")
     public boolean existsBySku(String sku) {
         try {
             ProductResponse response = productClient.getProductBySku(sku);

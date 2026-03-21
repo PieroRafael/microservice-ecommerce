@@ -42,6 +42,26 @@ spring:
     virtual:
       enabled: true
 
+  # Feign Circuit Breaker (Resilience4j)
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: false # Deshabilitado para usar solo @CircuitBreaker en el Adaptador (limpieza de logs)
+
+# Configuracion de Resilience4j 
+resilience4j:
+  circuitbreaker:
+    instances:
+      productService:   # Nombre de la instancia que usaremos en la anotacion
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10              # Evalua los ultimos 10 llamados
+        minimumNumberOfCalls: 5            # Necesita 5 peticiones minimo para calular la tasa de fallo
+        failureRateThreshold: 50           # Si el 50% falla, el circuito se ABRE
+        waitDurationInOpenState: 10s       # Tiempo de espera antes de probar de nuevo (Half-Open)
+        permittedNumberOfCallsInHalfOpenState: 3 # Llamados permitidos en estado Half-Open
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
 eureka:
   client:
     service-url:

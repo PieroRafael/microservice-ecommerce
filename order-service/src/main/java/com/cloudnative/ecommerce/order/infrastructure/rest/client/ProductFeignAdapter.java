@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 /**
- * Adaptador de Infraestructura que implementa el Puerto de Salida.
+ * Adaptador de Infraestructura que implementa el Puerto de Salida (Output Port)
  * Aísla al dominio de la tecnología específica (Feign).
  */
 @Component
@@ -32,6 +32,17 @@ public class ProductFeignAdapter implements ProductGateway {
     private final RateLimiterRegistry rateLimiterRegistry;
     private final BulkheadRegistry bulkheadRegistry;
 
+    /*
+     * Configura la Observabilidad (relacionado con LOGS) del sistema mediante el
+     * consumo de eventos de Resilience4j.
+     * Este método implementa la técnica de Event Consumers para monitorear
+     * el comportamiento de 'productService'. Se encarga de interceptar eventos
+     * internos de los mecanismos de tolerancia a fallos y transformarlos en LOGS de
+     * advertencia.
+     * Sirve para : Rastrear intentos de reintento, bloqueos por límite de
+     * tasa y saturación de capacidad en tiempo real, facilitando la auditoría y el
+     * diagnóstico de errores.
+     */
     @PostConstruct
     public void setupLoggers() {
         retryRegistry.retry("productService").getEventPublisher()
@@ -41,11 +52,12 @@ public class ProductFeignAdapter implements ProductGateway {
                         event.getLastThrowable().getMessage()));
 
         rateLimiterRegistry.rateLimiter("productService").getEventPublisher()
-                .onFailure(event -> log.warn("Resilience4j RateLimiter: Petición denegada por límite de tasa en {}.", 
+                .onFailure(event -> log.warn("Resilience4j RateLimiter: Petición denegada por límite de tasa en {}.",
                         event.getRateLimiterName()));
 
         bulkheadRegistry.bulkhead("productService").getEventPublisher()
-                .onCallRejected(event -> log.warn("Resilience4j Bulkhead: Petición rechazada, capacidad máxima alcanzada en {}.", 
+                .onCallRejected(event -> log.warn(
+                        "Resilience4j Bulkhead: Petición rechazada, capacidad máxima alcanzada en {}.",
                         event.getBulkheadName()));
     }
 
@@ -62,11 +74,13 @@ public class ProductFeignAdapter implements ProductGateway {
             log.warn("Producto no encontrado en product-service: {}", id);
             return false;
         }
-        // Las excepciones 5xx o de conexión se propagan para que CircuitBreaker las registre
+        // Las excepciones 5xx o de conexión se propagan para que CircuitBreaker las
+        // registre
     }
 
     public boolean fallbackExistsById(UUID id, Throwable t) {
-        log.error("Circuit Breaker OPEN o Error en product-service para el id {}. Fallback activado. Causa: {}", id, t.getMessage());
+        log.error("Circuit Breaker OPEN o Error en product-service para el id {}. Fallback activado. Causa: {}", id,
+                t.getMessage());
         throw new ServiceUnavailableException("product-service",
                 "Catálogo de productos no disponible temporalmente", t);
     }
@@ -87,7 +101,8 @@ public class ProductFeignAdapter implements ProductGateway {
     }
 
     public boolean fallbackExistsBySku(String sku, Throwable t) {
-        log.error("Circuit Breaker OPEN o Error en product-service para el sku {}. Fallback activado. Causa: {}", sku, t.getMessage());
+        log.error("Circuit Breaker OPEN o Error en product-service para el sku {}. Fallback activado. Causa: {}", sku,
+                t.getMessage());
         throw new ServiceUnavailableException("product-service",
                 "Catálogo de productos no disponible temporalmente", t);
     }

@@ -16,11 +16,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/**").authenticated() // Protegemos nuestras rutas API
-                        .anyRequest().permitAll() // Permitimos health checks de Actuator si los hay
-                )
+                        .anyRequest().permitAll()) // Permitimos health checks de Actuator si los hay
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(Customizer.withDefaults()) // Configuramos como Resource Server validando JWT
-                );
+                        .jwt(Customizer.withDefaults())); // Configuramos como Resource Server validando JWT
         return http.build();
     }
+
 }

@@ -12,24 +12,23 @@ public class ProductRestMapper {
         if (request == null)
             return null;
         return Product.builder()
-                .sku(request.getSku())
-                .name(request.getName())
-                .description(request.getDescription())
-                .price(request.getPrice())
-                .stock(request.getStock())
+                .sku(request.sku())
+                .name(request.name())
+                .description(request.description())
+                .price(request.price())
+                .stock(request.stock())
                 .build();
     }
 
     public ProductResponse toResponse(Product domain) {
         if (domain == null)
             return null;
-        return ProductResponse.builder()
-                .id(domain.getId())
-                .sku(domain.getSku())
-                .name(domain.getName())
-                .description(domain.getDescription())
-                .price(domain.getPrice())
-                .available(domain.hasStock())
-                .build();
+        return new ProductResponse(
+                domain.getId(),
+                domain.getSku(),
+                domain.getName(),
+                domain.getDescription(),
+                domain.getPrice(),
+                domain.hasStock());
     }
 }

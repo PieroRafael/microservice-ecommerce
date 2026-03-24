@@ -1,0 +1,44 @@
+### Inventory Service API Tests
+
+@host = http://localhost:8084/api/v1/inventory
+@token = Bearer YOUR_TOKEN_HERE
+
+### 1. Crear Inventario inicial (SKU: KB-MECH-RGB)
+POST {{host}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "skuCode": "KB-MECH-RGB",
+  "quantity": 100
+}
+
+### 2. Crear Inventario inicial (SKU: MOUSE-WL-20K)
+POST {{host}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "skuCode": "MOUSE-WL-20K",
+  "quantity": 50
+}
+
+### 3. Obtener Inventario por SKU
+GET {{host}}/KB-MECH-RGB
+Authorization: {{token}}
+
+### 4. Listar Todo el Inventario
+GET {{host}}
+Authorization: {{token}}
+
+### 5. Verificar si hay stock (Disponible: true)
+GET {{host}}/KB-MECH-RGB/in-stock?quantity=5
+Authorization: {{token}}
+
+### 6. Verificar si hay stock (Insuficiente: false)
+GET {{host}}/KB-MECH-RGB/in-stock?quantity=200
+Authorization: {{token}}
+
+### 7. Probar Error 404 (SKU inexistente)
+GET {{host}}/NON-EXISTENT-SKU
+Authorization: {{token}}

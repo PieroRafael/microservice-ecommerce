@@ -1,17 +1,13 @@
 package com.cloudnative.ecommerce.product.infrastructure.rest.dto;
 
-import lombok.Builder;
-import lombok.Data;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
-@Builder
-public class ProductResponse {
-    private UUID id;
-    private String sku;
-    private String name;
-    private String description;
-    private BigDecimal price;
-    private boolean available; // Ejemplo de dato transformado del dominio (stock > 0)
+public record ProductResponse(
+        UUID id,
+        String sku,
+        String name,
+        String description,
+        BigDecimal price,
+        boolean available) {
 }

@@ -31,6 +31,10 @@ Authorization: {{token}}
 GET {{host}}
 Authorization: {{token}}
 
+### 4.1 Verificar stock tras consumo Kafka (SKU: KB-MECH-RGB)
+GET {{host}}/KB-MECH-RGB
+Authorization: {{token}}
+
 ### 5. Verificar si hay stock (Disponible: true)
 GET {{host}}/KB-MECH-RGB/in-stock?quantity=5
 Authorization: {{token}}

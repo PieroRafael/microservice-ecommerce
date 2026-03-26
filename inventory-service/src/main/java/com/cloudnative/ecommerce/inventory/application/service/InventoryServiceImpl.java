@@ -1,3 +1,10 @@
+/**
+ * InventoryServiceImpl - Application Service.
+ * 
+ * Implementación del puerto de entrada InventoryService.
+ * Coordina la lógica de negocio para la gestión de stocks, asegurando la consistencia
+ * transaccional y validando invariantes (como stock suficiente) antes de persistir.
+ */
 package com.cloudnative.ecommerce.inventory.application.service;
 
 import com.cloudnative.ecommerce.inventory.domain.exception.InventoryNotFoundException;
@@ -56,5 +63,19 @@ public class InventoryServiceImpl implements InventoryService {
         inventory.setQuantity(newQuantity);
         inventory.setUpdatedAt(LocalDateTime.now());
         return inventoryRepository.save(inventory);
+    }
+
+    @Override
+    @Transactional
+    public void reduceStock(String skuCode, int quantity) {
+        log.info("Reduciendo stock para SKU: {} en cantidad: {}", skuCode, quantity);
+        Inventory inventory = inventoryRepository.findBySkuCode(skuCode)
+                .orElseThrow(() -> new InventoryNotFoundException(skuCode));
+
+        // Delegar lógica al dominio
+        inventory.decreaseStock(quantity);
+        
+        inventoryRepository.save(inventory);
+        log.info("Stock reducido con éxito para SKU: {}. Nuevo total: {}", skuCode, inventory.getQuantity());
     }
 }

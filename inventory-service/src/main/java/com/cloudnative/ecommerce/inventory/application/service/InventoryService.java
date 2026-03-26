@@ -1,12 +1,15 @@
+/**
+ * InventoryService - Input Port.
+ * 
+ * Define las operaciones permitidas sobre el inventario desde la perspectiva de la aplicación.
+ * Incluye la capacidad de reducir stock de forma atómica ante eventos de órdenes.
+ */
 package com.cloudnative.ecommerce.inventory.application.service;
 
 import com.cloudnative.ecommerce.inventory.domain.model.Inventory;
 
 import java.util.List;
 
-/**
- * Puerto de Entrada (Input Port) para operaciones de inventario.
- */
 public interface InventoryService {
 
     Inventory createInventory(Inventory inventory);
@@ -18,4 +21,6 @@ public interface InventoryService {
     boolean isInStock(String skuCode, int quantity);
 
     Inventory updateStock(String skuCode, int newQuantity);
+
+    void reduceStock(String skuCode, int quantity);
 }

@@ -1,7 +1,7 @@
 ### Pruebas de API - Order Service
 
 @host = http://localhost:8083/api/v1/orders
-@token = Bearer YOUR_TOKEN_HERE
+@token = Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJoRkstU0VRcUwwMzNHcmJISDM2a1cyUDFPaURkdnl4SVcxNkU0QkRubGgwIn0.eyJleHAiOjE3NzQzNzE3MDQsImlhdCI6MTc3NDM3MTQwNCwianRpIjoiMzFmMTdhYTItMzgzNS00OGUyLTllNmItODY4ODg5Zjk5MmQ3IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL3JlYWxtcy9jbG91Z...
 
 ### 1. Estado del servicio (Virtual Threads Check)
 GET {{host}}/status

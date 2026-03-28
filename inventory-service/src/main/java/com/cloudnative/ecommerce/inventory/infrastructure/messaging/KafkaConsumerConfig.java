@@ -7,6 +7,9 @@
  */
 package com.cloudnative.ecommerce.inventory.infrastructure.messaging;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,20 +36,30 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
+        // 🛠️ CONFIGURACIÓN FINAL ROBUSTA (ESTÁNDAR 2026)
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Instanciamos el deserializador para el tipo específico (usando casting para compatibilidad de Bean)
+        @SuppressWarnings("unchecked")
+        JsonDeserializer<Object> jsonDeserializer = (JsonDeserializer) new JsonDeserializer<>(
+                com.cloudnative.ecommerce.inventory.domain.event.OrderCreatedEvent.class, 
+                objectMapper
+        );
+        
+        jsonDeserializer.addTrustedPackages("com.cloudnative.ecommerce.*");
+        jsonDeserializer.setUseTypeHeaders(false);
+
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         
-        // Permitir deserialización de records de dominio
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.cloudnative.ecommerce.*");
-        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-        
-        // Mapeo explícito (opcional si se usa el mismo nombre de clase, pero recomendado)
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.cloudnative.ecommerce.inventory.domain.event.OrderCreatedEvent");
-
-        return new DefaultKafkaConsumerFactory<>(props);
+        return new DefaultKafkaConsumerFactory<>(
+                props, 
+                new StringDeserializer(), 
+                jsonDeserializer
+        );
     }
 
     @Bean
@@ -54,7 +67,6 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = 
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        // El soporte para Virtual Threads se activa vía application.yml o propiedad global
         return factory;
     }
 }

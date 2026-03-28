@@ -1,15 +1,10 @@
-/**
- * InventoryServiceImpl - Application Service.
- * 
- * Implementación del puerto de entrada InventoryService.
- * Coordina la lógica de negocio para la gestión de stocks, asegurando la consistencia
- * transaccional y validando invariantes (como stock suficiente) antes de persistir.
- */
 package com.cloudnative.ecommerce.inventory.application.service;
 
 import com.cloudnative.ecommerce.inventory.domain.exception.InventoryNotFoundException;
 import com.cloudnative.ecommerce.inventory.domain.model.Inventory;
 import com.cloudnative.ecommerce.inventory.domain.repository.InventoryRepository;
+import com.cloudnative.ecommerce.inventory.infrastructure.persistence.entity.ProcessedOrderEntity;
+import com.cloudnative.ecommerce.inventory.infrastructure.persistence.repository.ProcessedOrderJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +20,7 @@ import java.util.List;
 public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final ProcessedOrderJpaRepository processedOrderRepository;
 
     @Override
     @Transactional
@@ -67,15 +64,25 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     @Transactional
-    public void reduceStock(String skuCode, int quantity) {
-        log.info("Reduciendo stock para SKU: {} en cantidad: {}", skuCode, quantity);
+    public void reduceStock(UUID orderId, String skuCode, int quantity) {
+        log.info("Intento de reducción de stock para SKU: {} por orden: {}", skuCode, orderId);
+
+        if (processedOrderRepository.existsById(orderId)) {
+            log.warn("Orden {} ya procesada anteriormente. Saltando para asegurar idempotencia.", orderId);
+            return;
+        }
+
         Inventory inventory = inventoryRepository.findBySkuCode(skuCode)
                 .orElseThrow(() -> new InventoryNotFoundException(skuCode));
 
-        // Delegar lógica al dominio
         inventory.decreaseStock(quantity);
-        
         inventoryRepository.save(inventory);
-        log.info("Stock reducido con éxito para SKU: {}. Nuevo total: {}", skuCode, inventory.getQuantity());
+
+        processedOrderRepository.save(ProcessedOrderEntity.builder()
+                .orderId(orderId)
+                .processedAt(LocalDateTime.now())
+                .build());
+
+        log.info("Stock reducido y orden {} registrada con éxito.", orderId);
     }
 }

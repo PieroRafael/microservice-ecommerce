@@ -59,8 +59,7 @@ public class Inventory {
      */
     public void decreaseStock(int amount) {
         if (quantity == null || quantity < amount) {
-            throw new IllegalStateException(
-                    "No se puede descontar " + amount + " unidades del SKU " + skuCode);
+            throw new com.cloudnative.ecommerce.inventory.domain.exception.StockInsufficientException(skuCode, amount);
         }
         this.quantity -= amount;
         this.updatedAt = LocalDateTime.now();

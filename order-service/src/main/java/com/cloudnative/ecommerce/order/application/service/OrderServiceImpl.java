@@ -11,6 +11,7 @@ import com.cloudnative.ecommerce.order.domain.event.OrderCreatedEvent;
 import com.cloudnative.ecommerce.order.domain.exception.OrderNotFoundException;
 import com.cloudnative.ecommerce.order.domain.exception.ProductNotFoundException;
 import com.cloudnative.ecommerce.order.domain.model.Order;
+import com.cloudnative.ecommerce.order.domain.model.OrderStatus;
 import com.cloudnative.ecommerce.order.domain.port.out.OrderEventPublisher;
 import com.cloudnative.ecommerce.order.domain.port.out.ProductGateway;
 import com.cloudnative.ecommerce.order.domain.repository.OrderRepository;
@@ -43,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
             throw new ProductNotFoundException(sku);
         }
 
+        order.setStatus(OrderStatus.PENDING_INVENTORY);
         Order savedOrder = orderRepository.save(order);
 
         // Publicar evento de dominio a Kafka
@@ -73,5 +75,23 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void deleteOrder(UUID id) {
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void completeOrder(UUID id) {
+        Order order = getOrderById(id);
+        order.complete();
+        orderRepository.save(order);
+        log.info("Orden {} marcada como COMPLETED.", id);
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(UUID id) {
+        Order order = getOrderById(id);
+        order.cancel();
+        orderRepository.save(order);
+        log.warn("Orden {} marcada como CANCELLED.", id);
     }
 }

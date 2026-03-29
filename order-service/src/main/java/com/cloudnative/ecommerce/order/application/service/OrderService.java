@@ -12,4 +12,8 @@ public interface OrderService {
     List<Order> getAllOrders();
 
     void deleteOrder(UUID id);
+
+    void completeOrder(UUID id);
+
+    void cancelOrder(UUID id);
 }

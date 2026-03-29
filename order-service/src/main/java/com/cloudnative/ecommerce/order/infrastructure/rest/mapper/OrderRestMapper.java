@@ -28,6 +28,7 @@ public class OrderRestMapper {
                 domain.getSkuCode(),
                 domain.getQuantity(),
                 domain.getPrice(),
+                domain.getStatus(),
                 domain.hasQuantity());
     }
 }

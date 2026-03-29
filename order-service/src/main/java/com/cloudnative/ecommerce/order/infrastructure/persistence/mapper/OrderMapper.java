@@ -17,6 +17,7 @@ public class OrderMapper {
                 .skuCode(entity.getSkuCode())
                 .price(entity.getPrice())
                 .quantity(entity.getQuantity())
+                .status(entity.getStatus())
                 .build();
     }
 
@@ -30,6 +31,7 @@ public class OrderMapper {
                 .skuCode(order.getSkuCode())
                 .price(order.getPrice())
                 .quantity(order.getQuantity())
+                .status(order.getStatus())
                 .build();
     }
 }

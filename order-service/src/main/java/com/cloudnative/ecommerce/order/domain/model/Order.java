@@ -18,10 +18,19 @@ public class Order {
     private String skuCode;
     private BigDecimal price;
     private Integer quantity;
+    private OrderStatus status;
 
     // Lógica de validación de dominio
     public boolean hasQuantity() {
         return quantity != null && quantity > 0;
+    }
+
+    public void complete() {
+        this.status = OrderStatus.COMPLETED;
+    }
+
+    public void cancel() {
+        this.status = OrderStatus.CANCELLED;
     }
 
 }

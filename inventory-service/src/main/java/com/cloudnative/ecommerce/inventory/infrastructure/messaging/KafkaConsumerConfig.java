@@ -41,31 +41,29 @@ public class KafkaConsumerConfig {
                 .registerModule(new JavaTimeModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        // Instanciamos el deserializador para el tipo específico (usando casting para compatibilidad de Bean)
+        // Instanciamos el deserializador para el tipo específico (usando casting para
+        // compatibilidad de Bean)
         @SuppressWarnings("unchecked")
-        JsonDeserializer<Object> jsonDeserializer = (JsonDeserializer) new JsonDeserializer<>(
-                com.cloudnative.ecommerce.inventory.domain.event.OrderCreatedEvent.class, 
-                objectMapper
-        );
-        
+        JsonDeserializer<Object> jsonDeserializer = (JsonDeserializer<Object>) (JsonDeserializer<?>) new JsonDeserializer<>(
+                com.cloudnative.ecommerce.inventory.domain.event.OrderCreatedEvent.class,
+                objectMapper);
+
         jsonDeserializer.addTrustedPackages("com.cloudnative.ecommerce.*");
         jsonDeserializer.setUseTypeHeaders(false);
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        
+
         return new DefaultKafkaConsumerFactory<>(
-                props, 
-                new StringDeserializer(), 
-                jsonDeserializer
-        );
+                props,
+                new StringDeserializer(),
+                jsonDeserializer);
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = 
-                new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }

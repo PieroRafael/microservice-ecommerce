@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.cloudnative.ecommerce.order.domain.model.OrderStatus;
+
 @Entity
 @Table(name = "orders")
 @Data
@@ -30,4 +32,8 @@ public class OrderEntity {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status;
 }

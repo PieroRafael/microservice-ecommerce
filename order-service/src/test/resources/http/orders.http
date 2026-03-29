@@ -49,3 +49,27 @@ Content-Type: application/json
   "price": 10.00,
   "quantity": 1
 }
+
+### 7. Saga - Happy Path (Inventory Existe y Alcanza)
+POST {{host}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "orderNumber": "ORD-SAGA-HAPPY",
+  "skuCode": "KB-MECH-RGB",
+  "price": 89.99,
+  "quantity": 2
+}
+
+### 8. Saga - Compensating Path (Fallo de stock)
+POST {{host}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "orderNumber": "ORD-SAGA-FAIL",
+  "skuCode": "MOUSE-WL-20K",
+  "price": 49.99,
+  "quantity": 600
+}

@@ -1,0 +1,27 @@
+﻿### 📦 TEST: Transactional Outbox Pattern (Lección 40)
+### Este archivo valida el flujo atómico: Order Creation -> Outbox Persistence -> Kafka Relay.
+
+@gateway = http://localhost:8080
+@order_service = http://localhost:8083
+
+### 1. Crear una nueva orden (Trigger del Outbox)
+# Al ejecutar esto, la orden se guarda en 'orders' y el evento en 'outbox_events'
+POST {{order_service}}/api/v1/orders
+Content-Type: application/json
+
+{
+    "skuCode": "IPHONE_15_PRO",
+    "price": 999.99,
+    "quantity": 1
+}
+
+### 2. Verificar estado de la orden en DB (vía REST)
+GET {{order_service}}/api/v1/orders
+Accept: application/json
+
+### 3. Verificar estado del Outbox (Acceso directo a DB si estuviera disponible)
+# Nota: La verificación de la tabla 'outbox_events' debe hacerse vía pgAdmin en el puerto 5432 (order-db).
+# Query: SELECT * FROM outbox_events ORDER BY created_at DESC;
+
+### 4. Verificar llegada a Kafka (order-placed-topic)
+# Acceder a http://localhost:9093 para visualizar el mensaje procesado por el Relay.

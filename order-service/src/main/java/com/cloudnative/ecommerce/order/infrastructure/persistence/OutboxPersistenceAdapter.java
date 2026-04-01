@@ -1,8 +1,3 @@
-﻿/**
- * OutboxPersistenceAdapter - Infrastructure Adapter (Persistence).
- * 
- * Implementación del puerto OutboxRepository utilizando Spring Data JPA.
- */
 package com.cloudnative.ecommerce.order.infrastructure.persistence;
 
 import com.cloudnative.ecommerce.order.domain.model.OutboxEvent;
@@ -10,11 +5,16 @@ import com.cloudnative.ecommerce.order.domain.model.OutboxStatus;
 import com.cloudnative.ecommerce.order.domain.port.out.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+/**
+ * OutboxPersistenceAdapter - Infrastructure Adapter (Persistence).
+ * 
+ * Implementación del puerto OutboxRepository utilizando Spring Data JPA.
+ */
 @Component
 @RequiredArgsConstructor
 public class OutboxPersistenceAdapter implements OutboxRepository {
@@ -41,7 +41,7 @@ public class OutboxPersistenceAdapter implements OutboxRepository {
         return springDataOutboxRepository.findByStatusOrderByCreatedAtAsc(status)
                 .stream()
                 .map(this::mapToDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -66,4 +66,3 @@ public class OutboxPersistenceAdapter implements OutboxRepository {
         );
     }
 }
-

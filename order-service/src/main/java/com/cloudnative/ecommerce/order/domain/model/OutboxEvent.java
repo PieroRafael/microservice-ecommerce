@@ -15,6 +15,7 @@ import java.util.UUID;
  * Se utiliza el patrón Record de Java 21 para inmutabilidad garantizada.
  */
 public record OutboxEvent(
+
         UUID id,
         UUID aggregateId,
         String eventType,
@@ -22,6 +23,7 @@ public record OutboxEvent(
         OutboxStatus status,
         LocalDateTime createdAt,
         LocalDateTime processedAt) {
+
     public static OutboxEvent create(UUID aggregateId, String eventType, String payload) {
         return new OutboxEvent(
                 UUID.randomUUID(),
@@ -32,4 +34,5 @@ public record OutboxEvent(
                 LocalDateTime.now(),
                 null);
     }
+
 }

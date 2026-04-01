@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +35,10 @@ public class InventoryEntity {
 
     @Column(nullable = false)
     private Integer reserved;
+
+    @Version
+    @Column(nullable = false)
+    private Long version;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;

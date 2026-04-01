@@ -15,6 +15,7 @@ public class InventoryPersistenceMapper {
                 .skuCode(entity.getSkuCode())
                 .quantity(entity.getQuantity())
                 .reserved(entity.getReserved())
+                .version(entity.getVersion())
                 .updatedAt(entity.getUpdatedAt())
                 .build();
     }
@@ -27,6 +28,7 @@ public class InventoryPersistenceMapper {
                 .skuCode(domain.getSkuCode())
                 .quantity(domain.getQuantity())
                 .reserved(domain.getReserved())
+                .version(domain.getVersion())
                 .updatedAt(domain.getUpdatedAt())
                 .build();
     }

@@ -22,6 +22,7 @@ public class Inventory {
     private String skuCode;
     private Integer quantity;
     private Integer reserved;
+    private Long version;
     private LocalDateTime updatedAt;
 
     /**

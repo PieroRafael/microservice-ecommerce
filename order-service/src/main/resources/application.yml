@@ -34,7 +34,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        "[format_sql]": true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   # Virtual Threads (Java 21)
@@ -51,11 +51,13 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "com.cloudnative.ecommerce.*"
-        spring.json.use.type.headers: false
-        isolation.level: read_committed
+        "[spring.json.trusted.packages]": "com.cloudnative.ecommerce.*"
+        "[spring.json.use.type.headers]": false
+        "[isolation.level]": read_committed
     producer:
       transaction-id-prefix: tx-order-
+      properties:
+        "[enable.idempotence]": true # Tuning SRE: Garantiza entrega EOS tolerante a micro-cortes de red antes del ACK
 
   # Feign Circuit Breaker (Resilience4j)
   cloud:

@@ -52,11 +52,13 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "com.cloudnative.ecommerce.*"
-        spring.json.use.type.headers: false
-        isolation.level: read_committed
+        "[spring.json.trusted.packages]": "com.cloudnative.ecommerce.*"
+        "[spring.json.use.type.headers]": false
+        "[isolation.level]": read_committed
     producer:
       transaction-id-prefix: tx-inventory-
+      properties:
+        "[enable.idempotence]": true # Garantiza que si un ACK se pierde, Kafka Broker evite mensajes duplicados (EOS Native)
 
 eureka:
   client:

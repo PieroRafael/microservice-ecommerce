@@ -10,6 +10,9 @@
     "infra:restart": "docker-compose restart",
     "build:all": "gradlew build -x test",
     "build:full": "gradlew build",
+    "build:docker": "gradlew jibDockerBuild -x test",
+    "build:tar": "gradlew jibBuildTar -x test",
+    "docker:load": "powershell -ExecutionPolicy Bypass -File scripts/load-docker-tars.ps1",
     "clean:all": "gradlew clean"
   }
 }

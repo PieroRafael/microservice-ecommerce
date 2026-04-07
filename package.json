@@ -13,6 +13,10 @@
     "build:docker": "gradlew jibDockerBuild -x test",
     "build:tar": "gradlew jibBuildTar -x test",
     "docker:load": "powershell -ExecutionPolicy Bypass -File scripts/load-docker-tars.ps1",
+    "k8s:up": "minikube start --cpus 2 --memory 4096 --driver docker",
+    "k8s:down": "minikube stop",
+    "k8s:status": "minikube status",
+    "k8s:dashboard": "minikube dashboard",
     "clean:all": "gradlew clean"
   }
 }

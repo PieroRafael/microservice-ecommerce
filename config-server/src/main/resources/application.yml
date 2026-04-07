@@ -11,3 +11,18 @@ spring:
       server:
         native:
           search-locations: file:/${user.dir}/config-repo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState
+        liveness:
+          include: livenessState

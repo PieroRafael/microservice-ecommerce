@@ -1,7 +1,6 @@
 rootProject.name = "cloudnative-ecommerce"
 
 // Infraestructura Core
-include("config-server")
 include("discovery-server")
 include("api-gateway")
 

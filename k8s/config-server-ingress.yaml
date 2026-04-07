@@ -1,0 +1,28 @@
+# Config-Server Ingress (Fase 2: Contrato de Acceso Externo)
+# ==========================================================
+# Este archivo define la regla de enrutamiento HTTP L7 que expone
+# el Config-Server desde el host del desarrollador.
+# Estándar 2026: Ingress NGINX + Host-based routing.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: config-server-ingress
+  labels:
+    app: config-server
+    part-of: ecommerce-platform
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx # Usa el addon NGINX de Minikube
+  rules:
+    - host: config-server.local # Dominio local (mapeado en /etc/hosts)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: config-server  # Referencia al Service creado arriba
+                port:
+                  number: 80         # Puerto del Service (no del Pod)

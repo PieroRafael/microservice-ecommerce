@@ -1,0 +1,21 @@
+# Config-Server Service (Fase 2: Contrato de Red)
+# ==========================================================
+# Este archivo define el punto de acceso estable para el Config-Server.
+# Estándar 2026: ClusterIP + DNS interno + Abstracción de puertos.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+    part-of: ecommerce-platform
+spec:
+  type: ClusterIP # Solo accesible dentro del clúster (comunicación inter-servicios)
+  selector:
+    app: config-server # DEBE coincidir con las labels del Deployment
+  ports:
+    - name: http
+      port: 80         # Puerto que ven los demás servicios del clúster
+      targetPort: 8888  # Puerto real donde escucha el Config-Server
+      protocol: TCP

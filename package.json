@@ -17,6 +17,8 @@
     "k8s:down": "minikube stop",
     "k8s:status": "minikube status",
     "k8s:dashboard": "minikube dashboard",
+    "k8s:tunnel": "minikube tunnel",
+    "k8s:apply": "kubectl apply -f k8s/",
     "clean:all": "gradlew clean"
   }
 }

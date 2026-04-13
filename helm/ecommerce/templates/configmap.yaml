@@ -1,0 +1,18 @@
+# ConfigMap Template (Parametrizado con Go Templates)
+# ==========================================================
+# Los valores se inyectan desde values.yaml en tiempo de renderizado.
+# Helm sustituye {{ .Values.xxx }} por el valor real antes de enviarlo a K8s.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ecommerce-config
+  labels:
+    {{- include "ecommerce.labels" . | nindent 4 }}
+data:
+  SPRING_PROFILES_ACTIVE: {{ .Values.config.springProfilesActive }}
+  DB_HOST_PRODUCT: {{ .Values.config.database.productHost }}
+  DB_HOST_ORDER: {{ .Values.config.database.orderHost }}
+  DB_HOST_INVENTORY: {{ .Values.config.database.inventoryHost }}
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: {{ .Values.config.eureka.defaultZone }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.config.kafka.bootstrapServers }}

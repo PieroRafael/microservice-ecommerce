@@ -1,0 +1,42 @@
+# values.yaml - Valores Centralizados del Ecosistema
+# ==========================================================
+# Este archivo es la "fuente única de verdad" para toda la configuración.
+# Cambiar un valor aquí y ejecutar `helm upgrade` actualiza todo el clúster.
+# Estándar 2026: Parametrización total. Cero valores hardcodeados en templates.
+
+# ==========================================
+# Configuración Global (ConfigMap)
+# ==========================================
+config:
+  # Perfil de Spring Boot para el entorno K8s
+  springProfilesActive: prod
+
+  # Hosts de Bases de Datos (DNS nativo de K8s)
+  database:
+    productHost: product-db
+    orderHost: order-db
+    inventoryHost: inventory-db
+
+  # Service Discovery (Eureka)
+  eureka:
+    defaultZone: http://discovery-server:8761/eureka/
+
+  # Mensajería (Kafka)
+  kafka:
+    bootstrapServers: kafka:29092
+
+# ==========================================
+# Credenciales Sensibles (Secret - Base64)
+# ==========================================
+secrets:
+  database:
+    productUser: YWRtaW4=      # admin
+    productPassword: YWRtaW4=  # admin
+    orderUser: YWRtaW4=        # admin
+    orderPassword: YWRtaW4=    # admin
+    inventoryUser: YWRtaW4=    # admin
+    inventoryPassword: YWRtaW4= # admin
+
+  keycloak:
+    admin: YWRtaW4=            # admin
+    adminPassword: YWRtaW4=    # admin

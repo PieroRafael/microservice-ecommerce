@@ -1,0 +1,14 @@
+# Chart.yaml - Metadatos del Helm Chart
+# ==========================================================
+# Define la identidad, versión y descripción del paquete.
+# Estándar 2026: Versionado semántico independiente del código Java.
+
+apiVersion: v2
+name: ecommerce
+description: Helm Chart para el ecosistema CloudNative E-Commerce (Microservicios Spring Boot 3.4)
+type: application
+version: 0.1.0        # Versión del CHART (infraestructura)
+appVersion: "1.0.0"   # Versión de la APLICACIÓN (código Java)
+
+maintainers:
+  - name: CloudNative Team

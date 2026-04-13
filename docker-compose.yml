@@ -112,8 +112,23 @@ services:
       kafka:
         condition: service_healthy
 
+  # LocalStack — Simulador de servicios AWS local (S3, SQS, SNS)
+  localstack:
+    image: localstack/localstack:3.8.0
+    container_name: localstack
+    ports:
+      - "4566:4566" # Edge Port único
+    environment:
+      - DEBUG=1
+      - SERVICES=s3,sqs,sns # Levantar solo los servicios estrictamente necesarios
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "localstack_data:/var/lib/localstack"
+
 volumes:
   postgres_data:
   order_data:
   inventory_data:
   kafka_data:
+  localstack_data:

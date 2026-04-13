@@ -1,0 +1,8 @@
+# Helm Chart Ignore Patterns
+.git
+.gitignore
+*.md
+.vscode
+.agent
+.antigravity
+.vscode

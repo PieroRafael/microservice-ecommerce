@@ -1,0 +1,17 @@
+===============================================
+  CloudNative E-Commerce - Helm Chart Deployed
+===============================================
+
+  Chart:   {{ .Chart.Name }}-{{ .Chart.Version }}
+  Release: {{ .Release.Name }}
+
+  Recursos creados:
+    - ConfigMap: ecommerce-config
+    - Secret:    ecommerce-secrets
+
+  Comandos utiles:
+    kubectl get configmaps -l part-of=ecommerce-platform
+    kubectl get secrets -l part-of=ecommerce-platform
+    helm status {{ .Release.Name }}
+
+===============================================

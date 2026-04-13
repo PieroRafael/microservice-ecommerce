@@ -18,7 +18,10 @@
     "k8s:status": "minikube status",
     "k8s:dashboard": "minikube dashboard",
     "k8s:tunnel": "minikube tunnel",
-    "k8s:apply": "kubectl apply -f k8s/",
+    "helm:install": "helm install ecommerce ./helm/ecommerce",
+    "helm:upgrade": "helm upgrade ecommerce ./helm/ecommerce",
+    "helm:uninstall": "helm uninstall ecommerce",
+    "helm:status": "helm status ecommerce",
     "clean:all": "gradlew clean"
   }
 }
